@@ -2,7 +2,7 @@ name: 'Cache APT Packages'
 description: 'Install APT based packages and cache them for future runs.'
 author: awalsh128
 branding:
-  icon: 'hard-drive'  
+  icon: 'hard-drive'
   color: 'green'
 
 inputs:
@@ -13,7 +13,7 @@ inputs:
   version:
     description: 'Version of cache to load. Each version will have its own cache. Note, all characters except spaces are allowed.'
     required: false
-    default: '' 
+    default: ''
   execute_install_scripts:
     description: 'Execute Debian package pre and post install script upon restore. See README.md caveats for more information.'
     required: false
