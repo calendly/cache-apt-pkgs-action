@@ -31,7 +31,7 @@ add_repository="${5}"
 input_packages="${@:6}"
 
 # Trim commas, excess spaces, and sort.
-log "Normalizing package list from [${input_packages}]..."
+log "Normalizing package list"
 packages="$(get_normalized_package_list "${input_packages}")"
 log "done"
 
