@@ -2,7 +2,7 @@
 
 # Don't fail on error. We use the exit status as a conditional.
 #
-# This is the default behavior but can be overridden by the caller in the 
+# This is the default behavior but can be overridden by the caller in the
 # SHELLOPTS env var.
 set +e
 
@@ -17,7 +17,7 @@ set +e
 #   Filepath of the install script, otherwise an empty string.
 ###############################################################################
 function execute_install_script {
-  local package_name=$(basename ${2} | awk -F\= '{print $1}')  
+  local package_name=$(basename ${2} | awk -F\= '{print $1}')
   local install_script_filepath=$(\
     get_install_script_filepath "${1}" "${package_name}" "${3}")
   if test ! -z "${install_script_filepath}"; then
@@ -54,14 +54,14 @@ function get_install_script_filepath {
 #   The list of colon delimited action syntax pairs with each pair equals
 #   delimited. <name>:<version> <name>:<version>...
 ###############################################################################
-function get_installed_packages {   
+function get_installed_packages {
   local install_log_filepath="${1}"
-  local regex="^Unpacking ([^ :]+)([^ ]+)? (\[[^ ]+\]\s)?\(([^ )]+)"  
-  local dep_packages=""  
+  local regex="^Unpacking ([^ :]+)([^ ]+)? (\[[^ ]+\]\s)?\(([^ )]+)"
+  local dep_packages=""
   while read -r line; do
     # ${regex} should be unquoted since it isn't a literal.
     if [[ "${line}" =~ ${regex} ]]; then
-      dep_packages="${dep_packages}${BASH_REMATCH[1]}=${BASH_REMATCH[4]} "      
+      dep_packages="${dep_packages}${BASH_REMATCH[1]}=${BASH_REMATCH[4]} "
     else
       log_err "Unable to parse package name and version from \"${line}\""
       exit 2
@@ -91,7 +91,7 @@ function get_package_name_ver {
     log_err "Unexpected version resolution for package '${name}'"
     ver="$(apt-cache show ${name} | grep '^Version:' | awk '{print $2}')"
   fi
-  echo "${name}" "${ver}"  
+  echo "${name}" "${ver}"
 }
 
 ###############################################################################
@@ -108,12 +108,16 @@ function get_normalized_package_list {
   local packages=$(echo "${1}" \
     | sed 's/[,\]/ /g; s/\s\+/ /g; s/^\s\+//g; s/\s\+$//g' \
     | sort -t' ')
+  echo "packages is now '${packages}'"
   local script_dir="$(dirname -- "$(realpath -- "${0}")")"
+  echo "script_dir is '${sript_dir}'"
 
   local architecture=$(dpkg --print-architecture)
+  echo "architecture is '${architecture}'"
   if [ "${architecture}" == "arm64" ]; then
     ${script_dir}/apt_query-arm64 normalized-list ${packages}
   else
+    echo "Running ${script_dir}/apt_query-x86 normalized-list ${packages}"
     ${script_dir}/apt_query-x86 normalized-list ${packages}
   fi
 }
@@ -166,8 +170,8 @@ function validate_bool {
 # Returns:
 #   Log lines from write.
 ###############################################################################
-function write_manifest {  
-  if [ ${#2} -eq 0 ]; then 
+function write_manifest {
+  if [ ${#2} -eq 0 ]; then
     log "Skipped ${1} manifest write. No packages to install."
   else
     log "Writing ${1} packages manifest to ${3}..."
