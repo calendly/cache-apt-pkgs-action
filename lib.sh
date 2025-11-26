@@ -108,16 +108,12 @@ function get_normalized_package_list {
   local packages=$(echo "${1}" \
     | sed 's/[,\]/ /g; s/\s\+/ /g; s/^\s\+//g; s/\s\+$//g' \
     | sort -t' ')
-  log "packages is now '${packages}'"
   local script_dir="$(dirname -- "$(realpath -- "${0}")")"
-  log "script_dir is '${sript_dir}'"
 
   local architecture=$(dpkg --print-architecture)
-  log "architecture is '${architecture}'"
   if [ "${architecture}" == "arm64" ]; then
     ${script_dir}/apt_query-arm64 normalized-list ${packages}
   else
-    log "Running ${script_dir}/apt_query-x86 normalized-list ${packages}"
     ${script_dir}/apt_query-x86 normalized-list ${packages}
   fi
 }
