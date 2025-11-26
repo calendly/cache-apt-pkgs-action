@@ -31,7 +31,7 @@ add_repository="${5}"
 input_packages="${@:6}"
 
 # Trim commas, excess spaces, and sort.
-log "Normalizing package list..."
+log "Normalizing package list from [${input_packages}]..."
 packages="$(get_normalized_package_list "${input_packages}")"
 log "done"
 
@@ -40,7 +40,7 @@ mkdir -p ${cache_dir}
 
 log "Validating action arguments (version='${version}', packages='${packages}')...";
 if grep -q " " <<< "${version}"; then
-  log "aborted" 
+  log "aborted"
   log "Version value '${version}' cannot contain spaces." >&2
   exit 2
 fi
